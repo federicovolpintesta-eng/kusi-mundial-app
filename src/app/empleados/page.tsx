@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from './lib/supabase';
+import { supabase } from '../lib/supabase';
 
 export default function Home() {
   const router = useRouter();
@@ -11,7 +11,6 @@ export default function Home() {
     nombre: '',
     apellido: '',
     dni: '',
-    habitacion: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +38,7 @@ export default function Home() {
         return;
       }
       
-      localStorage.setItem('kusi_guest', JSON.stringify({ ...formData, userType: 'guest' }));
+      localStorage.setItem('kusi_guest', JSON.stringify({ ...formData, userType: 'employee' }));
       router.push('/fixture');
     } catch (error) {
       console.error(error);
@@ -59,7 +58,7 @@ export default function Home() {
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-blue-600"></div>
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black text-[#0e74b5] mb-2 tracking-tighter">Kusi Mundial</h1>
-          <p className="text-slate-500 font-medium">Fixture Interactivo 2026</p>
+          <p className="text-slate-500 font-medium">Acceso Empleados - Fixture 2026</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -97,18 +96,6 @@ export default function Home() {
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-slate-50 text-slate-800"
               placeholder="Número de documento"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1">Habitación</label>
-            <input 
-              required
-              type="text" 
-              name="habitacion"
-              value={formData.habitacion}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-slate-50 text-slate-800"
-              placeholder="Ej. 204"
             />
           </div>
 

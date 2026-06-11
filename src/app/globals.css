@@ -24,3 +24,33 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media print {
+  /* Hide everything by default on print */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Show only the printable area and its children */
+  #printable-area, #printable-area * {
+    visibility: visible;
+  }
+  
+  /* Position the printable area at the top left of the page */
+  #printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    /* Optional: Ensure background colors are printed (some browsers need this) */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide scrollbars or extra margins that might cause blank pages */
+  @page {
+    margin: 0;
+  }
+}
