@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Totem Kusi</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap');
+    
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #0e74b5 0%, #1e3a8a 100%);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden; 
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 90%;
+      height: 94%;
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 2% 0;
+    }
+
+    /* Abstract top shape */
+    .top-shape {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 120%;
+      height: 35%;
+      background: linear-gradient(135deg, #0e74b5 0%, #3b82f6 100%);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .header {
+      z-index: 2;
+      width: 100%;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .header img {
+      max-width: 55%;
+      height: auto;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+    }
+
+    .content {
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-grow: 1;
+      width: 90%;
+    }
+
+    .content h1 {
+      font-size: 26px;
+      font-weight: 900;
+      color: #1e3a8a;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+
+    .content h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #475569;
+      margin: 0 0 20px 0;
+      line-height: 1.4;
+      max-width: 85%;
+    }
+
+    .qr-wrapper {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(14, 116, 181, 0.15);
+      border: 2px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .qr-wrapper img {
+      width: 200px;
+      height: 200px;
+    }
+
+    .qr-caption {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #0e74b5;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .steps {
+      display: flex;
+      gap: 20px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 8px 16px;
+      border-radius: 50px;
+      color: #1e293b;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .step-number {
+      background: #0e74b5;
+      color: white;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-right: 8px;
+      font-size: 14px;
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="top-shape"></div>
+    
+    <div class="header">
+      <img src="file:///Users/federicovolpintesta/Desktop/fixtureKusi/kusi-mundial-app/public/kusi-header.png" alt="Kusi Mundial">
+    </div>
+
+    <div class="content">
+      <h1>¡Demuestra cuánto sabes de fútbol!</h1>
+      <h2>Escanea el código QR, pronostica los resultados y escala a lo más alto del ranking.</h2>
+      
+      <div class="qr-wrapper">
+        <img src="file:///Users/federicovolpintesta/Desktop/fixtureKusi/kusi-mundial-app/qr_huespedes.png" alt="QR Code">
+        <div class="qr-caption">ESCANEAR AQUÍ</div>
+      </div>
+      
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          Ingresa tus datos
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          Anota los goles
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pantalla Empleados Kusi</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap');
+    
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1920px;
+      height: 1080px;
+      font-family: 'Montserrat', sans-serif;
+      background: #020617; /* Very dark slate */
+      color: #ffffff;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Vistoso Background effects */
+    .glow-1 {
+      position: absolute;
+      top: -200px; left: -200px;
+      width: 1000px; height: 1000px;
+      background: radial-gradient(circle, rgba(14,116,181,0.5) 0%, rgba(2,6,23,0) 70%);
+      z-index: 1;
+    }
+    .glow-2 {
+      position: absolute;
+      bottom: -300px; right: -100px;
+      width: 1200px; height: 1200px;
+      background: radial-gradient(circle, rgba(56,189,248,0.2) 0%, rgba(2,6,23,0) 70%);
+      z-index: 1;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      display: flex;
+      padding: 80px 100px;
+    }
+
+    .left-col {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 80px;
+    }
+
+    .right-col {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .logos-container {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .logos-container img {
+      width: 250px; /* SAME SIZE for both */
+      height: 250px;
+      object-fit: contain;
+      background: rgba(255,255,255,0.85); /* White background so logos pop */
+      padding: 20px;
+      border-radius: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,255,255,1);
+    }
+
+    h1 {
+      font-size: 85px;
+      font-weight: 900;
+      color: #ffffff;
+      margin: 0 0 25px 0;
+      text-transform: uppercase;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    h1 span {
+      color: #38bdf8; /* bright blue */
+    }
+
+    h2 {
+      font-size: 34px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin: 0 0 50px 0;
+      line-height: 1.4;
+      max-width: 95%;
+    }
+
+    .steps-container {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      background: rgba(14, 116, 181, 0.3);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 15px 30px;
+      border-radius: 50px;
+      color: #e0f2fe;
+      font-weight: 800;
+      font-size: 26px;
+      backdrop-filter: blur(10px);
+    }
+
+    .step-number {
+      background: #38bdf8;
+      color: #020617;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-right: 15px;
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .staff-badge {
+      display: inline-flex;
+      align-items: center;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      padding: 15px 35px;
+      border-radius: 20px;
+      font-weight: 900;
+      font-size: 26px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      box-shadow: 0 15px 30px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Premium QR Card */
+    .qr-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 40px;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+    }
+
+    .qr-card-inner {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .qr-card img {
+      width: 500px;
+      height: 500px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .qr-caption {
+      margin-top: 40px;
+      font-size: 40px;
+      font-weight: 900;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 6px;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+
+  <div class="container">
+    
+    <div class="left-col">
+      <div class="logos-container">
+        <!-- Both images forced to exactly the same size container with white background to pop against dark mode -->
+        <img src="file:///Users/federicovolpintesta/Desktop/fixtureKusi/kusi-mundial-app/public/kusi-header.png" alt="Kusi Mundial">
+        <img src="file:///Users/federicovolpintesta/Desktop/fixtureKusi/kusi-mundial-app/public/kusi-footer.png" alt="Tremun">
+      </div>
+      
+      <h1>El Mundial del<br><span>Staff de Los Pinos</span></h1>
+      <h2>Participa en nuestro Prode exclusivo para empleados. Escanea el código QR, anota tus pronósticos y competí por la gloria.</h2>
+      
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          Ingresa tus datos
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          Anota tus goles
+        </div>
+      </div>
+      
+      <div>
+        <div class="staff-badge">★ Acceso Exclusivo Staff</div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="qr-card">
+        <div class="qr-card-inner">
+          <img src="file:///Users/federicovolpintesta/Desktop/qr_empleados.png" alt="QR Code Empleados">
+        </div>
+        <div class="qr-caption">ESCANEAR AQUÍ</div>
+      </div>
+    </div>
+    
+  </div>
+</body>
+</html>
