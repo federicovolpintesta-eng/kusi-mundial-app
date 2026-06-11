@@ -16,6 +16,10 @@ export default function AdminPage() {
   const [guestToPrint, setGuestToPrint] = useState<any>(null);
   const [printMode, setPrintMode] = useState<'guest' | 'leaderboard'>('guest');
   const [activeTab, setActiveTab] = useState<'guests' | 'employees'>('guests');
+  
+  const [savedMatches, setSavedMatches] = useState<Record<number, boolean>>({});
+  const [unlockedMatches, setUnlockedMatches] = useState<Record<number, boolean>>({});
+
   const handlePrintGuest = (guest: any) => {
     setPrintMode('guest');
     setGuestToPrint(guest);
@@ -39,13 +43,18 @@ export default function AdminPage() {
       const { data: resultsData } = await supabase.from('kusi_real_results').select('*');
       if (resultsData) {
         const results: Record<number, { scoreA: string, scoreB: string }> = {};
+        const saved: Record<number, boolean> = {};
         resultsData.forEach(matchData => {
           results[parseInt(matchData.match_id)] = {
             scoreA: matchData.score_a,
             scoreB: matchData.score_b
           };
+          if (matchData.score_a !== '' && matchData.score_b !== '') {
+            saved[parseInt(matchData.match_id)] = true;
+          }
         });
         setRealResults(results);
+        setSavedMatches(saved);
       }
 
       // Fetch Guests Predictions
@@ -107,6 +116,8 @@ export default function AdminPage() {
         score_b: res.scoreB
       }]);
       if (error) throw error;
+      setSavedMatches(prev => ({ ...prev, [matchId]: true }));
+      setUnlockedMatches(prev => ({ ...prev, [matchId]: false }));
       alert(`Resultado del partido ${matchId} guardado exitosamente.`);
     } catch (error) {
       console.error(error);
@@ -291,40 +302,64 @@ export default function AdminPage() {
           <div className="xl:col-span-2">
             <h2 className="text-2xl font-bold mb-4 text-slate-800">Partidos del Fixture</h2>
             <div className="space-y-4">
-              {data.matches.map(match => (
-                <div key={match.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row items-center gap-4">
+              {data.matches.map(match => {
+                const isSaved = savedMatches[match.id];
+                const isUnlocked = unlockedMatches[match.id];
+                const isLocked = isSaved && !isUnlocked;
+
+                return (
+                <div key={match.id} className={`bg-white p-4 rounded-xl shadow-sm border flex flex-col md:flex-row items-center gap-4 transition-all ${isLocked ? 'border-slate-200 opacity-90 bg-slate-50' : 'border-blue-300 ring-2 ring-blue-50'}`}>
                   <div className="flex-1 text-center md:text-left">
-                    <div className="text-xs text-slate-500 font-bold mb-1 uppercase">{match.stage} - Partido {match.id}</div>
+                    <div className="text-xs text-slate-500 font-bold mb-1 uppercase flex items-center justify-center md:justify-start gap-2">
+                      {isLocked && (
+                        <span className="text-slate-400" title="Partido Bloqueado">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                        </span>
+                      )}
+                      {match.stage} - Partido {match.id}
+                    </div>
                     <div className="text-lg font-black uppercase text-slate-800">{match.team_a} vs {match.team_b}</div>
                     <div className="text-xs text-slate-400 mt-1">{match.date_placeholder}</div>
                   </div>
                   
-                  <div className="flex items-center gap-2">
+                  <div className={`flex items-center gap-2 ${isLocked ? 'opacity-70 pointer-events-none' : ''}`}>
                     <input
                       type="text" inputMode="numeric" maxLength={2}
+                      disabled={isLocked}
                       value={realResults[match.id]?.scoreA || ''}
                       onChange={e => handleScoreChange(match.id, 'scoreA', e.target.value)}
-                      className="w-12 h-12 text-center text-xl font-bold border-2 border-slate-300 rounded-lg focus:border-blue-500 outline-none"
+                      className="w-12 h-12 text-center text-xl font-bold border-2 border-slate-300 rounded-lg focus:border-blue-500 outline-none disabled:bg-slate-200"
                       placeholder="-"
                     />
                     <span className="font-bold text-slate-400">-</span>
                     <input
                       type="text" inputMode="numeric" maxLength={2}
+                      disabled={isLocked}
                       value={realResults[match.id]?.scoreB || ''}
                       onChange={e => handleScoreChange(match.id, 'scoreB', e.target.value)}
-                      className="w-12 h-12 text-center text-xl font-bold border-2 border-slate-300 rounded-lg focus:border-blue-500 outline-none"
+                      className="w-12 h-12 text-center text-xl font-bold border-2 border-slate-300 rounded-lg focus:border-blue-500 outline-none disabled:bg-slate-200"
                       placeholder="-"
                     />
                   </div>
 
-                  <button
-                    onClick={() => handleSaveResult(match.id)}
-                    className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors whitespace-nowrap"
-                  >
-                    Guardar
-                  </button>
+                  {isLocked ? (
+                    <button
+                      onClick={() => setUnlockedMatches(prev => ({ ...prev, [match.id]: true }))}
+                      className="w-full md:w-auto bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+                      Editar
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleSaveResult(match.id)}
+                      className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors whitespace-nowrap flex items-center justify-center gap-2 shadow-md shadow-green-600/20"
+                    >
+                      Guardar
+                    </button>
+                  )}
                 </div>
-              ))}
+              )})}
             </div>
           </div>
 
