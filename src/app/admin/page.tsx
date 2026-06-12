@@ -402,33 +402,33 @@ export default function AdminPage() {
                   Nadie ha participado aún.
                 </div>
               ) : (
-                <div className="flex flex-col gap-3 overflow-y-auto pr-2 custom-scrollbar">
+                <div className="flex flex-col gap-3 overflow-y-auto overflow-x-hidden pr-4 -mr-2 custom-scrollbar">
                   {currentLeaderboard.map((guest, idx) => (
-                    <div key={guest.dni} className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100 relative overflow-hidden">
+                    <div key={guest.dni} className="flex items-center gap-2 bg-slate-50 p-2 md:p-3 rounded-xl border border-slate-100 relative overflow-hidden">
                       {idx === 0 && <div className="absolute top-0 left-0 w-1 h-full bg-yellow-400"></div>}
                       {idx === 1 && <div className="absolute top-0 left-0 w-1 h-full bg-slate-300"></div>}
                       {idx === 2 && <div className="absolute top-0 left-0 w-1 h-full bg-orange-400"></div>}
                       
-                      <div className="flex-shrink-0 w-6 text-center font-black text-slate-400">
+                      <div className="flex-shrink-0 w-5 md:w-6 text-center font-black text-slate-400 text-xs md:text-base ml-1">
                         {idx + 1}°
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-bold text-slate-800 text-sm uppercase truncate">
+                        <div className="font-bold text-slate-800 text-xs md:text-sm uppercase truncate">
                           {guest.nombre} {guest.apellido}
                         </div>
-                        <div className="text-xs text-slate-500 font-medium truncate">
+                        <div className="text-[10px] md:text-xs text-slate-500 font-medium truncate">
                           DNI: {guest.dni} {guest.habitacion && `| Hab: ${guest.habitacion}`}
                         </div>
                       </div>
-                      <div className="flex-shrink-0 bg-blue-100 text-blue-800 font-black px-3 py-1 rounded-lg">
+                      <div className="flex-shrink-0 bg-blue-100 text-blue-800 font-black px-2 py-1 md:px-3 rounded-lg text-xs md:text-sm whitespace-nowrap">
                         {guest.computedPoints} pts
                       </div>
                       <button 
                         onClick={() => handlePrintGuest(guest)} 
-                        className="flex-shrink-0 text-slate-400 hover:text-blue-600 transition-colors bg-white p-2 rounded-full shadow-sm"
+                        className="flex-shrink-0 text-slate-500 hover:text-blue-600 transition-colors bg-white p-1.5 md:p-2 rounded-full shadow-sm border border-slate-200"
                         title="Imprimir Fixture"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                         </svg>
                       </button>
@@ -441,6 +441,22 @@ export default function AdminPage() {
 
         </div>
       </div>
+
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+      `}</style>
     </div>
   );
 }
