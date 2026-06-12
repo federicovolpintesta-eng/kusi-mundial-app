@@ -108,7 +108,7 @@ export default function LiveLeaderboard() {
           ) : (
             <div className="flex flex-col gap-3">
               {leaderboard.map((guest, idx) => (
-                <div key={guest.dni} className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
+                <div key={guest.dni} className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden shrink-0">
                   {idx === 0 && <div className="absolute top-0 left-0 w-2 h-full bg-yellow-400"></div>}
                   {idx === 1 && <div className="absolute top-0 left-0 w-2 h-full bg-slate-300"></div>}
                   {idx === 2 && <div className="absolute top-0 left-0 w-2 h-full bg-orange-400"></div>}
