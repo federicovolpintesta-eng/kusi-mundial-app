@@ -402,9 +402,9 @@ export default function AdminPage() {
                   Nadie ha participado aún.
                 </div>
               ) : (
-                <div className="flex flex-col gap-3 overflow-y-auto pr-1 pb-4 custom-scrollbar">
+                <div className="flex flex-col gap-3 overflow-y-auto pr-1 py-4 custom-scrollbar">
                   {currentLeaderboard.map((guest, idx) => (
-                    <div key={guest.dni} className="flex items-center gap-2 bg-slate-50 p-2 md:p-3 rounded-xl border border-slate-100 relative overflow-hidden mr-3 mb-1">
+                    <div key={guest.dni} className="flex items-center gap-2 bg-slate-50 p-2 md:p-3 rounded-xl border border-slate-100 relative overflow-hidden mr-3">
                       {idx === 0 && <div className="absolute top-0 left-0 w-1 h-full bg-yellow-400"></div>}
                       {idx === 1 && <div className="absolute top-0 left-0 w-1 h-full bg-slate-300"></div>}
                       {idx === 2 && <div className="absolute top-0 left-0 w-1 h-full bg-orange-400"></div>}
