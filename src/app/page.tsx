@@ -7,6 +7,7 @@ import { supabase } from './lib/supabase';
 export default function Home() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isDeadlinePassed = new Date() > new Date('2026-06-13T16:00:00-03:00');
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -34,9 +35,18 @@ export default function Home() {
       if (error) throw error;
       
       if (data && data.length > 0) {
-        alert('Este DNI ya ha cargado sus pronósticos. ¡Solo puedes participar una vez! Si quieres revisar los resultados, puedes entrar a "Solo Ver Fixture y Resultados".');
-        setIsSubmitting(false);
-        return;
+        if (isDeadlinePassed) {
+          alert('Este DNI ya ha cargado sus pronósticos y el tiempo para editarlos ha finalizado. ¡Solo puedes participar una vez! Si quieres revisar los resultados, entra a "Solo Ver Fixture y Resultados".');
+          setIsSubmitting(false);
+          return;
+        }
+        localStorage.setItem('kusi_existing_predictions', JSON.stringify(data[0].predictions || {}));
+        if (data[0].id) {
+          localStorage.setItem('kusi_existing_id', data[0].id);
+        }
+      } else {
+        localStorage.removeItem('kusi_existing_predictions');
+        localStorage.removeItem('kusi_existing_id');
       }
       
       localStorage.setItem('kusi_guest', JSON.stringify({ ...formData, userType: 'guest' }));

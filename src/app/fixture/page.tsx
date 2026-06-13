@@ -21,6 +21,7 @@ export default function Fixture() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [realResults, setRealResults] = useState<Record<number, { scoreA: string, scoreB: string }>>({});
   const [isViewer, setIsViewer] = useState(false);
+  const isDeadlinePassed = new Date() > new Date('2026-06-13T16:00:00-03:00');
   const [points, setPoints] = useState<Record<number, number>>({});
 
   useEffect(() => {
@@ -32,6 +33,13 @@ export default function Fixture() {
       if (guest.role === 'viewer') {
         setIsViewer(true);
       }
+    }
+
+    const existingPredsStr = localStorage.getItem('kusi_existing_predictions');
+    if (existingPredsStr) {
+      try {
+        setPredictions(JSON.parse(existingPredsStr));
+      } catch (e) {}
     }
 
     const fetchResults = async () => {
@@ -90,6 +98,10 @@ export default function Fixture() {
 
   const handleScoreChange = (matchId: number, field: keyof Prediction, value: string) => {
     if (isViewer) return;
+    
+    const isMatchLocked = realResults[matchId] && realResults[matchId].scoreA !== '' && realResults[matchId].scoreB !== '';
+    if (isMatchLocked) return;
+
     if ((field === 'scoreA' || field === 'scoreB') && value !== '' && !/^[0-9]+$/.test(value)) return;
     
     setPredictions(prev => ({
@@ -102,24 +114,51 @@ export default function Fixture() {
   };
 
   const handleSubmit = async () => {
+    const existingId = localStorage.getItem('kusi_existing_id');
+    if (existingId && isDeadlinePassed) {
+      alert('El tiempo para modificar pronósticos ha finalizado.');
+      return;
+    }
     setIsSubmitting(true);
     const guest = JSON.parse(localStorage.getItem('kusi_guest') || '{}');
     
     const totalPoints = Object.values(points).reduce((a, b) => a + b, 0);
 
     try {
-      const { error } = await supabase.from('kusi_guests_predictions').insert([{
-        guest_info: guest,
-        predictions: predictions,
-        total_points: totalPoints
-      }]);
-      if (error) throw error;
+      if (existingId) {
+        const { error } = await supabase.from('kusi_guests_predictions').update({
+          guest_info: guest,
+          predictions: predictions,
+          total_points: totalPoints
+        }).eq('id', existingId);
+        if (error) throw error;
+      } else {
+        const { data: duplicateCheck } = await supabase
+          .from('kusi_guests_predictions')
+          .select('id')
+          .eq('guest_info->>dni', guest.dni);
+          
+        if (duplicateCheck && duplicateCheck.length > 0) {
+           alert('Seguridad: Este DNI ya existe. Si quieres modificar tus pronósticos, vuelve a la pantalla inicial e ingresa nuevamente.');
+           setIsSubmitting(false);
+           return;
+        }
+
+        const { error } = await supabase.from('kusi_guests_predictions').insert([{
+          guest_info: guest,
+          predictions: predictions,
+          total_points: totalPoints
+        }]);
+        if (error) throw error;
+      }
       
       // Guardamos en local para poder descargar el PDF
       localStorage.setItem('kusi_my_predictions', JSON.stringify({ guest, predictions }));
       
       alert(`¡Pronósticos guardados exitosamente! Tienes ${totalPoints} puntos acumulados.`);
       localStorage.removeItem('kusi_guest');
+      localStorage.removeItem('kusi_existing_predictions');
+      localStorage.removeItem('kusi_existing_id');
       router.push('/success');
     } catch (error) {
       console.error(error);
