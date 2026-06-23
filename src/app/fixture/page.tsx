@@ -86,6 +86,12 @@ export default function Fixture() {
   const [realResults, setRealResults] = useState<Record<number, { scoreA: string, scoreB: string }>>({});
   const [isViewer, setIsViewer] = useState(false);
   const [points, setPoints] = useState<Record<number, number>>({});
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const guestStr = localStorage.getItem('kusi_guest');
@@ -178,18 +184,37 @@ export default function Fixture() {
     }));
   };
 
-  const handleSubmit = async () => {
     const existingId = localStorage.getItem('kusi_existing_id');
     setIsSubmitting(true);
     const guest = JSON.parse(localStorage.getItem('kusi_guest') || '{}');
     
+    // Cheat prevention: ensure locked matches cannot be modified.
+    const existingStr = localStorage.getItem('kusi_existing_predictions');
+    const existingPreds = existingStr ? JSON.parse(existingStr) : {};
+    const finalPredictions = { ...predictions };
+    
+    data.matches.forEach(match => {
+      const matchDate = parseMatchDate(match.date_placeholder);
+      if (matchDate) {
+        const limitTime = new Date(matchDate.getTime() - 30 * 60000);
+        if (new Date() >= limitTime) {
+          // This match is locked. Revert any tampered changes to their original saved state.
+          if (existingPreds[match.id]) {
+            finalPredictions[match.id] = existingPreds[match.id];
+          } else {
+            delete finalPredictions[match.id];
+          }
+        }
+      }
+    });
+
     const totalPoints = Object.values(points).reduce((a, b) => a + b, 0);
 
     try {
       if (existingId) {
         const { error } = await supabase.from('kusi_guests_predictions').update({
           guest_info: guest,
-          predictions: predictions,
+          predictions: finalPredictions,
           total_points: totalPoints
         }).eq('id', existingId);
         if (error) throw error;
@@ -207,14 +232,14 @@ export default function Fixture() {
 
         const { error } = await supabase.from('kusi_guests_predictions').insert([{
           guest_info: guest,
-          predictions: predictions,
+          predictions: finalPredictions,
           total_points: totalPoints
         }]);
         if (error) throw error;
       }
       
       // Guardamos en local para poder descargar el PDF
-      localStorage.setItem('kusi_my_predictions', JSON.stringify({ guest, predictions }));
+      localStorage.setItem('kusi_my_predictions', JSON.stringify({ guest, predictions: finalPredictions }));
       
       alert(`¡Pronósticos guardados exitosamente! Tienes ${totalPoints} puntos acumulados.`);
       localStorage.removeItem('kusi_guest');
