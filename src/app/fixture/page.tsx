@@ -184,6 +184,7 @@ export default function Fixture() {
     }));
   };
 
+  const handleSubmit = async () => {
     const existingId = localStorage.getItem('kusi_existing_id');
     setIsSubmitting(true);
     const guest = JSON.parse(localStorage.getItem('kusi_guest') || '{}');
