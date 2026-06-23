@@ -15,13 +15,76 @@ type Prediction = {
   scoreB: string;
 };
 
+const parseMatchDate = (dateStr: string): Date | null => {
+  try {
+    let day = 1;
+    let month = 5;
+    let hours = 0;
+    let minutes = 0;
+
+    dateStr = dateStr.replace(' hs', '').trim();
+    const parts = dateStr.split(' - ');
+    if (parts.length !== 2) return null;
+
+    const datePart = parts[0].trim();
+    const timePart = parts[1].trim();
+
+    if (timePart.includes('.')) {
+      const [h, m] = timePart.split('.');
+      hours = parseInt(h);
+      minutes = parseInt(m);
+    } else if (timePart.includes(':')) {
+      const [h, m] = timePart.split(':');
+      hours = parseInt(h);
+      minutes = parseInt(m);
+    } else {
+      hours = parseInt(timePart);
+    }
+
+    if (datePart.includes('/')) {
+      const [d, m] = datePart.split('/');
+      day = parseInt(d);
+      month = parseInt(m) - 1;
+    } else {
+      const matchRegex = datePart.match(/(\d+)\s+de\s+(junio|julio)/i);
+      if (matchRegex) {
+        day = parseInt(matchRegex[1]);
+        month = matchRegex[2].toLowerCase() === 'junio' ? 5 : 6;
+      } else {
+        const dParts = datePart.split(' ');
+        day = parseInt(dParts[1]);
+        const mStr = dParts[3]?.toLowerCase();
+        if (mStr === 'junio') month = 5;
+        else if (mStr === 'julio') month = 6;
+      }
+    }
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const isoString = `2026-${pad(month + 1)}-${pad(day)}T${pad(hours)}:${pad(minutes)}:00-03:00`;
+    return new Date(isoString);
+  } catch (e) {
+    console.error('Error parsing date:', dateStr, e);
+    return null;
+  }
+};
+
+const checkMatchLocked = (match: any, realResults: any) => {
+  if (realResults[match.id] && realResults[match.id].scoreA !== '' && realResults[match.id].scoreB !== '') {
+    return true;
+  }
+  const matchDate = parseMatchDate(match.date_placeholder);
+  if (!matchDate) return false;
+  
+  const limitTime = new Date(matchDate.getTime() - 30 * 60000);
+  return new Date() >= limitTime;
+};
+
 export default function Fixture() {
   const router = useRouter();
   const [predictions, setPredictions] = useState<Record<number, Prediction>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [realResults, setRealResults] = useState<Record<number, { scoreA: string, scoreB: string }>>({});
   const [isViewer, setIsViewer] = useState(false);
-  const isDeadlinePassed = new Date() > new Date('2026-06-13T16:00:00-03:00');
   const [points, setPoints] = useState<Record<number, number>>({});
 
   useEffect(() => {
@@ -99,7 +162,9 @@ export default function Fixture() {
   const handleScoreChange = (matchId: number, field: keyof Prediction, value: string) => {
     if (isViewer) return;
     
-    const isMatchLocked = realResults[matchId] && realResults[matchId].scoreA !== '' && realResults[matchId].scoreB !== '';
+    const match = data.matches.find(m => m.id === matchId);
+    if (!match) return;
+    const isMatchLocked = checkMatchLocked(match, realResults);
     if (isMatchLocked) return;
 
     if ((field === 'scoreA' || field === 'scoreB') && value !== '' && !/^[0-9]+$/.test(value)) return;
@@ -115,10 +180,6 @@ export default function Fixture() {
 
   const handleSubmit = async () => {
     const existingId = localStorage.getItem('kusi_existing_id');
-    if (existingId && isDeadlinePassed) {
-      alert('El tiempo para modificar pronósticos ha finalizado.');
-      return;
-    }
     setIsSubmitting(true);
     const guest = JSON.parse(localStorage.getItem('kusi_guest') || '{}');
     
@@ -241,10 +302,11 @@ export default function Fixture() {
                 
                 <div className="border-t-[2px] border-[#1ca3d3]">
                   {matches.map((match, idx) => {
-                    const isMatchLocked = realResults[match.id] && realResults[match.id].scoreA !== '' && realResults[match.id].scoreB !== '';
+                    const isMatchLocked = checkMatchLocked(match, realResults);
+                    const isMatchFinished = realResults[match.id] && realResults[match.id].scoreA !== '' && realResults[match.id].scoreB !== '';
                     return (
                     <div key={match.id} className="flex flex-col border-b-[2px] border-[#1ca3d3] bg-white">
-                      {isMatchLocked && <div className="bg-slate-200 text-slate-500 text-[10px] font-bold text-center py-0.5">FINALIZADO</div>}
+                      {isMatchFinished && <div className="bg-slate-200 text-slate-500 text-[10px] font-bold text-center py-0.5">FINALIZADO</div>}
                       <div className="flex flex-row items-center">
                         <div className="w-[30%] md:w-[25%] px-1 py-3 flex items-center justify-start">
                           <p className="text-[9px] md:text-xs leading-tight text-slate-800 font-medium">
@@ -264,7 +326,7 @@ export default function Fixture() {
                             <input
                               type="text" inputMode="numeric" maxLength={2}
                               disabled={isViewer || isMatchLocked}
-                              value={isMatchLocked ? realResults[match.id].scoreA : (predictions[match.id]?.scoreA || '')}
+                              value={isMatchFinished ? realResults[match.id].scoreA : (predictions[match.id]?.scoreA || '')}
                               onChange={(e) => handleScoreChange(match.id, 'scoreA', e.target.value)}
                               className={`w-8 h-8 md:w-10 md:h-10 text-center text-lg md:text-xl font-bold border-[2px] border-[#1ca3d3] rounded-md text-slate-900 focus:outline-none ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-white'}`}
                               placeholder="-"
@@ -273,7 +335,7 @@ export default function Fixture() {
                             <input
                               type="text" inputMode="numeric" maxLength={2}
                               disabled={isViewer || isMatchLocked}
-                              value={isMatchLocked ? realResults[match.id].scoreB : (predictions[match.id]?.scoreB || '')}
+                              value={isMatchFinished ? realResults[match.id].scoreB : (predictions[match.id]?.scoreB || '')}
                               onChange={(e) => handleScoreChange(match.id, 'scoreB', e.target.value)}
                               className={`w-8 h-8 md:w-10 md:h-10 text-center text-lg md:text-xl font-bold border-[2px] border-[#1ca3d3] rounded-md text-slate-900 focus:outline-none ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-white'}`}
                               placeholder="-"
@@ -288,7 +350,7 @@ export default function Fixture() {
                         </div>
                       </div>
                       
-                      {isMatchLocked && (
+                      {isMatchFinished && (
                         <div className="w-full text-center bg-blue-50 py-1 text-xs md:text-sm font-bold text-slate-700 border-t border-blue-100">
                           FINALIZADO
                           {!isViewer && <span className="ml-2 text-green-600 bg-green-100 border border-green-300 rounded px-2">+{points[match.id] || 0} pts</span>}
@@ -309,10 +371,11 @@ export default function Fixture() {
                 
                 <div className="space-y-1">
                   {matches.map(match => {
-                    const isMatchLocked = realResults[match.id] && realResults[match.id].scoreA !== '' && realResults[match.id].scoreB !== '';
+                    const isMatchLocked = checkMatchLocked(match, realResults);
+                    const isMatchFinished = realResults[match.id] && realResults[match.id].scoreA !== '' && realResults[match.id].scoreB !== '';
                     return (
                     <div key={match.id} className="w-full flex flex-col bg-white border-b border-slate-200">
-                      {isMatchLocked && <div className="bg-slate-200 text-slate-500 text-[10px] font-bold text-center py-0.5">FINALIZADO</div>}
+                      {isMatchFinished && <div className="bg-slate-200 text-slate-500 text-[10px] font-bold text-center py-0.5">FINALIZADO</div>}
                       <div className="flex justify-between items-end px-1 pb-1 pt-1">
                         <span className="text-[10px] md:text-xs font-bold text-slate-800 w-1/3 text-left uppercase">{match.team_a}</span>
                         <span className="text-[8px] md:text-[10px] text-slate-600 w-1/3 text-center leading-tight">Partido {match.id} - {match.date_placeholder} - {match.stadium_placeholder}</span>
@@ -332,7 +395,7 @@ export default function Fixture() {
                           <input
                             type="text" inputMode="numeric" maxLength={2}
                             disabled={isViewer || isMatchLocked}
-                            value={isMatchLocked ? realResults[match.id].scoreA : (predictions[match.id]?.scoreA || '')}
+                            value={isMatchFinished ? realResults[match.id].scoreA : (predictions[match.id]?.scoreA || '')}
                             onChange={(e) => handleScoreChange(match.id, 'scoreA', e.target.value)}
                             className={`w-7 h-8 md:w-9 md:h-10 border border-[#1ca3d3] rounded-md text-center font-bold text-lg focus:outline-none ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-white text-slate-800'}`}
                             placeholder="-"
@@ -341,7 +404,7 @@ export default function Fixture() {
                           <input
                             type="text" inputMode="numeric" maxLength={2}
                             disabled={isViewer || isMatchLocked}
-                            value={isMatchLocked ? realResults[match.id].scoreB : (predictions[match.id]?.scoreB || '')}
+                            value={isMatchFinished ? realResults[match.id].scoreB : (predictions[match.id]?.scoreB || '')}
                             onChange={(e) => handleScoreChange(match.id, 'scoreB', e.target.value)}
                             className={`w-7 h-8 md:w-9 md:h-10 border border-[#1ca3d3] rounded-md text-center font-bold text-lg focus:outline-none ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-white text-slate-800'}`}
                             placeholder="-"
@@ -357,7 +420,7 @@ export default function Fixture() {
                         />
                       </div>
 
-                      {isMatchLocked && (
+                      {isMatchFinished && (
                         <div className="w-full text-center bg-blue-50 py-1 text-xs md:text-sm font-bold text-slate-700 border-t border-blue-100">
                           FINALIZADO
                           {!isViewer && <span className="ml-2 text-green-600 bg-green-100 border border-green-300 rounded px-2">+{points[match.id] || 0} pts</span>}
