@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import data from '../../data.json';
 import { supabase } from '../lib/supabase';
+import RulesModal from './RulesModal';
 
 type Prediction = {
   teamA?: string;
@@ -85,7 +86,9 @@ export default function Fixture() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [realResults, setRealResults] = useState<Record<number, { scoreA: string, scoreB: string }>>({});
   const [isViewer, setIsViewer] = useState(false);
+  const [userType, setUserType] = useState<'guest' | 'employee' | 'viewer'>('guest');
   const [points, setPoints] = useState<Record<number, number>>({});
+  const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
   const [, setTick] = useState(0);
 
   useEffect(() => {
@@ -101,6 +104,9 @@ export default function Fixture() {
       const guest = JSON.parse(guestStr);
       if (guest.role === 'viewer') {
         setIsViewer(true);
+        setUserType('viewer');
+      } else if (guest.userType) {
+        setUserType(guest.userType);
       }
     }
 
@@ -188,68 +194,35 @@ export default function Fixture() {
     const existingId = localStorage.getItem('kusi_existing_id');
     setIsSubmitting(true);
     const guest = JSON.parse(localStorage.getItem('kusi_guest') || '{}');
-    
-    // Cheat prevention: ensure locked matches cannot be modified.
-    const existingStr = localStorage.getItem('kusi_existing_predictions');
-    const existingPreds = existingStr ? JSON.parse(existingStr) : {};
-    const finalPredictions = { ...predictions };
-    
-    data.matches.forEach(match => {
-      const matchDate = parseMatchDate(match.date_placeholder);
-      if (matchDate) {
-        const limitTime = new Date(matchDate.getTime() - 30 * 60000);
-        if (new Date() >= limitTime) {
-          // This match is locked. Revert any tampered changes to their original saved state.
-          if (existingPreds[match.id]) {
-            finalPredictions[match.id] = existingPreds[match.id];
-          } else {
-            delete finalPredictions[match.id];
-          }
-        }
-      }
-    });
-
-    const totalPoints = Object.values(points).reduce((a, b) => a + b, 0);
 
     try {
-      if (existingId) {
-        const { error } = await supabase.from('kusi_guests_predictions').update({
+      const response = await fetch('/api/predictions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           guest_info: guest,
-          predictions: finalPredictions,
-          total_points: totalPoints
-        }).eq('id', existingId);
-        if (error) throw error;
-      } else {
-        const { data: duplicateCheck } = await supabase
-          .from('kusi_guests_predictions')
-          .select('id')
-          .eq('guest_info->>dni', guest.dni);
-          
-        if (duplicateCheck && duplicateCheck.length > 0) {
-           alert('Seguridad: Este DNI ya existe. Si quieres modificar tus pronósticos, vuelve a la pantalla inicial e ingresa nuevamente.');
-           setIsSubmitting(false);
-           return;
-        }
+          predictions,
+          existingId
+        })
+      });
 
-        const { error } = await supabase.from('kusi_guests_predictions').insert([{
-          guest_info: guest,
-          predictions: finalPredictions,
-          total_points: totalPoints
-        }]);
-        if (error) throw error;
+      const resultData = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(resultData.error || 'Error al guardar pronósticos');
       }
       
       // Guardamos en local para poder descargar el PDF
-      localStorage.setItem('kusi_my_predictions', JSON.stringify({ guest, predictions: finalPredictions }));
+      localStorage.setItem('kusi_my_predictions', JSON.stringify({ guest, predictions: resultData.predictions }));
       
-      alert(`¡Pronósticos guardados exitosamente! Tienes ${totalPoints} puntos acumulados.`);
+      alert(`¡Pronósticos guardados exitosamente! Tienes ${resultData.totalPoints} puntos acumulados.`);
       localStorage.removeItem('kusi_guest');
       localStorage.removeItem('kusi_existing_predictions');
       localStorage.removeItem('kusi_existing_id');
       router.push('/success');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert('Tuvimos un error al guardar. Asegúrate de haber configurado Firebase.');
+      alert(error.message || 'Tuvimos un error al guardar. Asegúrate de estar conectado a internet.');
     } finally {
       setIsSubmitting(false);
     }
@@ -284,8 +257,20 @@ export default function Fixture() {
 
   return (
     <div className="min-h-screen bg-[#fdfdfd] pb-32 font-sans">
-      <div className="w-full max-w-[1000px] mx-auto">
+      <RulesModal 
+        isOpen={isRulesModalOpen} 
+        onClose={() => setIsRulesModalOpen(false)} 
+        userType={userType} 
+      />
+
+      <div className="w-full max-w-[1000px] mx-auto relative">
         <img src="/kusi-header.png" alt="Kusi Mundial Header" className="w-full h-auto" />
+        <button 
+          onClick={() => setIsRulesModalOpen(true)}
+          className="absolute top-4 right-4 md:top-8 md:right-8 bg-white/90 hover:bg-white text-[#0e74b5] font-bold py-2 px-4 rounded-full shadow-lg text-sm md:text-base border-2 border-[#0e74b5] transition-transform transform hover:scale-105 backdrop-blur-sm z-10"
+        >
+          📖 Cómo Jugar
+        </button>
       </div>
 
       <div className="max-w-[1000px] mx-auto px-2 md:px-4 space-y-6 mt-4">
