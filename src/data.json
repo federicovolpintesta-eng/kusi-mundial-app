@@ -653,292 +653,258 @@
     {
       "id": 73,
       "stage": "Dieciseisavos de Final",
-      "team_a": "ALEMANIA",
-      "team_b": "PARAGUAY",
-      "date_placeholder": "Domingo 28 de junio - 19 hs",
-      "stadium_placeholder": "Estadio Dallas",
-      "status": "scheduled"
+      "team_a": "Sudafrica",
+      "team_b": "Canada",
+      "date_placeholder": "28/06 - 16 hs",
+      "stadium_placeholder": "Estadio Los Ángeles"
     },
     {
       "id": 74,
       "stage": "Dieciseisavos de Final",
-      "team_a": "FRANCIA",
-      "team_b": "SUECIA",
-      "date_placeholder": "Martes 30 de junio - 19 hs",
-      "stadium_placeholder": "Estadio Nueva York Nueva Jersey",
-      "status": "scheduled"
+      "team_a": "Alemania",
+      "team_b": "Paraguay",
+      "date_placeholder": "29/06 - 17.30 hs",
+      "stadium_placeholder": "Estadio Boston"
     },
     {
       "id": 75,
       "stage": "Dieciseisavos de Final",
-      "team_a": "SUDAFRICA",
-      "team_b": "CANADA",
-      "date_placeholder": "Martes 30 de junio - 16 hs",
-      "stadium_placeholder": "Estadio Houston",
-      "status": "scheduled"
+      "team_a": "Paises bajos",
+      "team_b": "Marruecos",
+      "date_placeholder": "29/06 - 22 hs",
+      "stadium_placeholder": "Estadio Monterrey"
     },
     {
       "id": 76,
       "stage": "Dieciseisavos de Final",
-      "team_a": "PAISES BAJOS",
-      "team_b": "MARRUECOS",
-      "date_placeholder": "Domingo 28 de junio - 19 hs",
-      "stadium_placeholder": "Estadio Azteca",
-      "status": "scheduled"
+      "team_a": "Francia",
+      "team_b": "Suecia",
+      "date_placeholder": "29/06 - 14 hs",
+      "stadium_placeholder": "Estadio Houston"
     },
     {
       "id": 77,
       "stage": "Dieciseisavos de Final",
-      "team_a": "PORTUGAL",
-      "team_b": "CROACIA",
-      "date_placeholder": "Domingo 28 de junio - 22 hs",
-      "stadium_placeholder": "Estadio Dallas",
-      "status": "scheduled"
+      "team_a": "Brasil",
+      "team_b": "Japon",
+      "date_placeholder": "30/06 - 18 hs",
+      "stadium_placeholder": "Estadio Nueva York Nueva Jersey"
     },
     {
       "id": 78,
       "stage": "Dieciseisavos de Final",
-      "team_a": "ESPAÑA",
-      "team_b": "AUSTRIA",
-      "date_placeholder": "Lunes 29 de junio - 13 hs",
-      "stadium_placeholder": "Estadio Nueva York Nueva Jersey",
-      "status": "scheduled"
+      "team_a": "Costa de marfil",
+      "team_b": "Noruega",
+      "date_placeholder": "30/06 - 14 hs",
+      "stadium_placeholder": "Estadio Dallas"
     },
     {
       "id": 79,
       "stage": "Dieciseisavos de Final",
-      "team_a": "ESTADOS UNIDOS",
-      "team_b": "BOSNIA HERZEGOVINA",
-      "date_placeholder": "Martes 30 de junio - 19 hs",
-      "stadium_placeholder": "Estadio Seattle",
-      "status": "scheduled"
+      "team_a": "Mexico",
+      "team_b": "Ecuador",
+      "date_placeholder": "30/06 - 22 hs",
+      "stadium_placeholder": "Estadio Ciudad de México"
     },
     {
       "id": 80,
       "stage": "Dieciseisavos de Final",
-      "team_a": "BELGICA",
-      "team_b": "SENEGAL",
-      "date_placeholder": "Viernes 3 de julio - 16 hs",
-      "stadium_placeholder": "Estadio Dallas",
-      "status": "scheduled"
+      "team_a": "Inglaterra",
+      "team_b": "El congo",
+      "date_placeholder": "01/07 - 13 hs",
+      "stadium_placeholder": "Estadio Atlanta"
     },
     {
       "id": 81,
       "stage": "Dieciseisavos de Final",
-      "team_a": "BRASIL",
-      "team_b": "JAPON",
-      "date_placeholder": "Martes 30 de junio - 16 hs",
-      "stadium_placeholder": "Estadio Miami",
-      "status": "scheduled"
+      "team_a": "Ee.uu",
+      "team_b": "Bosnia",
+      "date_placeholder": "01/07 - 21 hs",
+      "stadium_placeholder": "Estadio Bahía de San Francisco"
     },
     {
       "id": 82,
       "stage": "Dieciseisavos de Final",
-      "team_a": "COSTA DE MARFIL",
-      "team_b": "NORUEGA",
-      "date_placeholder": "Lunes 29 de junio - 22 hs",
-      "stadium_placeholder": "Estadio Miami",
-      "status": "scheduled"
+      "team_a": "Belgica",
+      "team_b": "Senegal",
+      "date_placeholder": "01/07 - 17 hs",
+      "stadium_placeholder": "Estadio Seattle"
     },
     {
       "id": 83,
       "stage": "Dieciseisavos de Final",
-      "team_a": "MEXICO",
-      "team_b": "ECUADOR",
-      "date_placeholder": "Miércoles 1 de julio - 13 hs",
-      "stadium_placeholder": "Estadio Nueva York Nueva Jersey",
-      "status": "scheduled"
+      "team_a": "Portugal",
+      "team_b": "Croacia",
+      "date_placeholder": "02/07 - 20 hs",
+      "stadium_placeholder": "Estadio Toronto"
     },
     {
       "id": 84,
       "stage": "Dieciseisavos de Final",
-      "team_a": "INGLATERRA",
-      "team_b": "CONGO",
-      "date_placeholder": "Viernes 3 de julio - 19 hs",
-      "stadium_placeholder": "Estadio Los Ángeles",
-      "status": "finished",
-      "score_a": 1,
-      "score_b": 1
+      "team_a": "España",
+      "team_b": "Austria",
+      "date_placeholder": "02/07 - 16 hs",
+      "stadium_placeholder": "Estadio Los Ángeles"
     },
     {
       "id": 85,
       "stage": "Dieciseisavos de Final",
-      "team_a": "ARGENTINA",
-      "team_b": "CABO VERDE",
-      "date_placeholder": "Jueves 2 de julio - 19 hs",
-      "stadium_placeholder": "Estadio Miami",
-      "status": "scheduled"
+      "team_a": "Suiza",
+      "team_b": "Argelia",
+      "date_placeholder": "03/07 - 00 hs",
+      "stadium_placeholder": "Estadio BC Place Vancouver"
     },
     {
       "id": 86,
       "stage": "Dieciseisavos de Final",
-      "team_a": "AUSTRALIA",
-      "team_b": "EGIPTO",
-      "date_placeholder": "Martes 30 de junio - 16 hs",
-      "stadium_placeholder": "Estadio Los Ángeles",
-      "status": "scheduled"
+      "team_a": "Argentina",
+      "team_b": "Cabo verde",
+      "date_placeholder": "03/07 - 19 hs",
+      "stadium_placeholder": "Estadio Miami"
     },
     {
       "id": 87,
       "stage": "Dieciseisavos de Final",
-      "team_a": "SUIZA",
-      "team_b": "ARGELIA",
-      "date_placeholder": "Domingo 28 de junio - 19 hs",
-      "stadium_placeholder": "Estadio Azteca",
-      "status": "scheduled"
+      "team_a": "Colombia",
+      "team_b": "Gahna",
+      "date_placeholder": "03/07 - 22.30 hs",
+      "stadium_placeholder": "Estadio Kansas City"
     },
     {
       "id": 88,
       "stage": "Dieciseisavos de Final",
-      "team_a": "COLOMBIA",
-      "team_b": "GHANA",
-      "date_placeholder": "Domingo 28 de junio - 13 hs",
-      "stadium_placeholder": "Estadio Azteca",
-      "status": "scheduled"
+      "team_a": "Australia",
+      "team_b": "Egipto",
+      "date_placeholder": "03/07 - 15 hs",
+      "stadium_placeholder": "Estadio Dallas"
     },
     {
       "id": 89,
       "stage": "Octavos de Final",
-      "team_a": "Ganador D1",
-      "team_b": "Ganador D2",
+      "team_a": "GANADOR PARTIDO 74",
+      "team_b": "GANADOR PARTIDO 77",
       "date_placeholder": "04/07 - 18 hs",
-      "stadium_placeholder": "Estadio Filadelfia",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Filadelfia"
     },
     {
       "id": 90,
       "stage": "Octavos de Final",
-      "team_a": "Ganador D3",
-      "team_b": "Ganador D4",
+      "team_a": "GANADOR PARTIDO 73",
+      "team_b": "GANADOR PARTIDO 75",
       "date_placeholder": "04/07 - 14 hs",
-      "stadium_placeholder": "Estadio Houston",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Houston"
     },
     {
       "id": 91,
       "stage": "Octavos de Final",
-      "team_a": "Ganador D5",
-      "team_b": "Ganador D6",
+      "team_a": "GAN. PARTIDO 76",
+      "team_b": "GAN. PARTIDO 78",
       "date_placeholder": "05/07 - 17 hs",
-      "stadium_placeholder": "Estadio Nueva York Nueva Jersey",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Nueva York Nueva Jersey"
     },
     {
       "id": 92,
       "stage": "Octavos de Final",
-      "team_a": "Ganador D7",
-      "team_b": "Ganador D8",
+      "team_a": "GANADOR PARTIDO 79",
+      "team_b": "GANADOR PARTIDO 80",
       "date_placeholder": "05/07 - 21 hs",
-      "stadium_placeholder": "Estadio Ciudad de México",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Ciudad de México"
     },
     {
       "id": 93,
       "stage": "Octavos de Final",
-      "team_a": "Ganador D9",
-      "team_b": "Ganador D10",
+      "team_a": "GANADOR PARTIDO 83",
+      "team_b": "GANADOR PARTIDO 84",
       "date_placeholder": "06/07 - 16 hs",
-      "stadium_placeholder": "Estadio Dallas",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Dallas"
     },
     {
       "id": 94,
       "stage": "Octavos de Final",
-      "team_a": "Ganador D11",
-      "team_b": "CONGO",
+      "team_a": "GANADOR PARTIDO 81",
+      "team_b": "GANADOR PARTIDO 82",
       "date_placeholder": "06/07 - 21 hs",
-      "stadium_placeholder": "Estadio Seattle",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Seattle"
     },
     {
       "id": 95,
       "stage": "Octavos de Final",
-      "team_a": "Ganador D13",
-      "team_b": "Ganador D14",
+      "team_a": "GANADOR PARTIDO 86",
+      "team_b": "GANADOR PARTIDO 88",
       "date_placeholder": "07/07 - 13 hs",
-      "stadium_placeholder": "Estadio Atlanta",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Atlanta"
     },
     {
       "id": 96,
       "stage": "Octavos de Final",
-      "team_a": "Ganador D15",
-      "team_b": "Ganador D16",
+      "team_a": "GAN. PARTIDO 85",
+      "team_b": "GAN. PARTIDO 87",
       "date_placeholder": "07/07 - 17 hs",
-      "stadium_placeholder": "Estadio BC Place Vancouver",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio BC Place Vancouver"
     },
     {
       "id": 97,
       "stage": "Cuartos de Final",
-      "team_a": "Ganador O1",
-      "team_b": "Ganador O2",
+      "team_a": "GANADOR PARTIDO 89",
+      "team_b": "GANADOR PARTIDO 90",
       "date_placeholder": "09/07 - 17 hs",
-      "stadium_placeholder": "Estadio Boston",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Boston"
     },
     {
       "id": 98,
       "stage": "Cuartos de Final",
-      "team_a": "Ganador O3",
-      "team_b": "Ganador O4",
+      "team_a": "GANADOR PARTIDO 93",
+      "team_b": "GANADOR PARTIDO 94",
       "date_placeholder": "10/07 - 16 hs",
-      "stadium_placeholder": "Estadio Los Ángeles",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Los Ángeles"
     },
     {
       "id": 99,
       "stage": "Cuartos de Final",
-      "team_a": "Ganador O5",
-      "team_b": "Ganador O6",
+      "team_a": "GANADOR PARTIDO 91",
+      "team_b": "GANADOR PARTIDO 92",
       "date_placeholder": "11/07 - 18 hs",
-      "stadium_placeholder": "Estadio Miami",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Miami"
     },
     {
       "id": 100,
       "stage": "Cuartos de Final",
-      "team_a": "Ganador O7",
-      "team_b": "Ganador O8",
+      "team_a": "GANADOR PARTIDO 95",
+      "team_b": "GANADOR PARTIDO 96",
       "date_placeholder": "11/07 - 22 hs",
-      "stadium_placeholder": "Estadio Kansas City",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Kansas City"
     },
     {
       "id": 101,
       "stage": "Semifinal",
-      "team_a": "Ganador C1",
-      "team_b": "Ganador C2",
+      "team_a": "GANADOR PARTIDO 97",
+      "team_b": "GANADOR PARTIDO 98",
       "date_placeholder": "14/07 - 16 hs",
-      "stadium_placeholder": "Estadio Dallas",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Dallas"
     },
     {
       "id": 102,
       "stage": "Semifinal",
-      "team_a": "Ganador C3",
-      "team_b": "Ganador C4",
+      "team_a": "GANADOR PARTIDO 99",
+      "team_b": "GANADOR PARTIDO 100",
       "date_placeholder": "14/07 - 16 hs",
-      "stadium_placeholder": "Estadio Atlanta",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Atlanta"
     },
     {
       "id": 103,
       "stage": "Tercer Puesto",
-      "team_a": "Perdedor S1",
-      "team_b": "Perdedor S2",
+      "team_a": "PERDEDOR PARTIDO 101",
+      "team_b": "PERDEDOR PARTIDO 102",
       "date_placeholder": "18/07 - 18 hs",
-      "stadium_placeholder": "Estadio Miami",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Miami"
     },
     {
       "id": 104,
       "stage": "Final",
-      "team_a": "Ganador S1",
-      "team_b": "Ganador S2",
+      "team_a": "GANADOR PARTIDO 101",
+      "team_b": "GANADOR PARTIDO 102",
       "date_placeholder": "19/07 - 16 hs",
-      "stadium_placeholder": "Estadio Nueva York Nueva Jersey",
-      "status": "scheduled"
+      "stadium_placeholder": "Estadio Nueva York Nueva Jersey"
     }
   ]
 }
