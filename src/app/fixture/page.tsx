@@ -84,7 +84,7 @@ export default function Fixture() {
   const router = useRouter();
   const [predictions, setPredictions] = useState<Record<number, Prediction>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [realResults, setRealResults] = useState<Record<number, { scoreA: string, scoreB: string }>>({});
+  const [realResults, setRealResults] = useState<Record<number, { scoreA: string, scoreB: string, teamA?: string, teamB?: string }>>({});
   const [isViewer, setIsViewer] = useState(false);
   const [userType, setUserType] = useState<'guest' | 'employee' | 'viewer'>('guest');
   const [points, setPoints] = useState<Record<number, number>>({});
@@ -120,11 +120,13 @@ export default function Fixture() {
     const fetchResults = async () => {
       const { data } = await supabase.from('kusi_real_results').select('*');
       if (data) {
-        const results: Record<number, { scoreA: string, scoreB: string }> = {};
+        const results: Record<number, { scoreA: string, scoreB: string, teamA?: string, teamB?: string }> = {};
         data.forEach(matchData => {
           results[parseInt(matchData.match_id)] = {
             scoreA: matchData.score_a,
-            scoreB: matchData.score_b
+            scoreB: matchData.score_b,
+            teamA: matchData.team_a,
+            teamB: matchData.team_b
           };
         });
         setRealResults(results);
@@ -329,7 +331,7 @@ export default function Fixture() {
                         <div className={`w-[70%] md:w-[75%] px-2 py-3 flex flex-row items-center justify-center ${isMatchLocked ? 'opacity-60' : ''}`}>
                           <div className="flex-1 flex justify-end items-center pr-2 md:pr-4">
                             <span className="font-black text-slate-900 text-sm md:text-xl text-right uppercase tracking-tighter" style={{ fontFamily: 'Impact, sans-serif', transform: 'scaleY(1.1)' }}>
-                              {match.team_a}
+                              {realResults[match.id]?.teamA || match.team_a}
                             </span>
                           </div>
 
@@ -355,7 +357,7 @@ export default function Fixture() {
 
                           <div className="flex-1 flex justify-start items-center pl-2 md:pl-4">
                             <span className="font-black text-slate-900 text-sm md:text-xl text-left uppercase tracking-tighter" style={{ fontFamily: 'Impact, sans-serif', transform: 'scaleY(1.1)' }}>
-                              {match.team_b}
+                              {realResults[match.id]?.teamB || match.team_b}
                             </span>
                           </div>
                         </div>
@@ -388,9 +390,9 @@ export default function Fixture() {
                     <div key={match.id} className="w-full flex flex-col bg-white border-b border-slate-200">
                       {isMatchFinished && <div className="bg-slate-200 text-slate-500 text-[10px] font-bold text-center py-0.5">FINALIZADO</div>}
                       <div className="flex justify-between items-end px-1 pb-1 pt-1">
-                        <span className="text-[10px] md:text-xs font-bold text-slate-800 w-1/3 text-left uppercase">{match.team_a}</span>
+                        <span className="text-[10px] md:text-xs font-bold text-slate-800 w-1/3 text-left uppercase">{realResults[match.id]?.teamA || match.team_a}</span>
                         <span className="text-[8px] md:text-[10px] text-slate-600 w-1/3 text-center leading-tight">Partido {match.id} - {match.date_placeholder} - {match.stadium_placeholder}</span>
-                        <span className="text-[10px] md:text-xs font-bold text-slate-800 w-1/3 text-right uppercase">{match.team_b}</span>
+                        <span className="text-[10px] md:text-xs font-bold text-slate-800 w-1/3 text-right uppercase">{realResults[match.id]?.teamB || match.team_b}</span>
                       </div>
                       
                       <div className={`flex justify-between items-center bg-white mb-1 ${isMatchLocked ? 'opacity-60' : ''}`}>

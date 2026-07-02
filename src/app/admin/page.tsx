@@ -11,7 +11,7 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   
-  const [realResults, setRealResults] = useState<Record<number, { scoreA: string, scoreB: string }>>({});
+  const [realResults, setRealResults] = useState<Record<number, { scoreA: string, scoreB: string, teamA?: string, teamB?: string }>>({});
   const [guests, setGuests] = useState<any[]>([]);
   const [guestToPrint, setGuestToPrint] = useState<any>(null);
   const [printMode, setPrintMode] = useState<'guest' | 'leaderboard'>('guest');
@@ -42,12 +42,14 @@ export default function AdminPage() {
       // Fetch Real Results
       const { data: resultsData } = await supabase.from('kusi_real_results').select('*');
       if (resultsData) {
-        const results: Record<number, { scoreA: string, scoreB: string }> = {};
+        const results: Record<number, { scoreA: string, scoreB: string, teamA?: string, teamB?: string }> = {};
         const saved: Record<number, boolean> = {};
         resultsData.forEach(matchData => {
           results[parseInt(matchData.match_id)] = {
             scoreA: matchData.score_a,
-            scoreB: matchData.score_b
+            scoreB: matchData.score_b,
+            teamA: matchData.team_a,
+            teamB: matchData.team_b
           };
           if (matchData.score_a !== '' && matchData.score_b !== '') {
             saved[parseInt(matchData.match_id)] = true;
@@ -92,7 +94,7 @@ export default function AdminPage() {
   };
 
   const handleScoreChange = (matchId: number, field: string, value: string) => {
-    if (value !== '' && !/^[0-9]+$/.test(value)) return;
+    if ((field === 'scoreA' || field === 'scoreB') && value !== '' && !/^[0-9]+$/.test(value)) return;
     setRealResults(prev => ({
       ...prev,
       [matchId]: {
@@ -104,21 +106,26 @@ export default function AdminPage() {
 
   const handleSaveResult = async (matchId: number) => {
     const res = realResults[matchId];
-    if (!res || res.scoreA === '' || res.scoreB === '') {
-      alert('Por favor completa ambos resultados antes de guardar.');
+    if (!res || ((res.scoreA === '' || res.scoreB === '') && (!res.teamA && !res.teamB))) {
+      alert('Por favor completa ambos resultados, o al menos los nombres de los equipos, antes de guardar.');
       return;
     }
     
     try {
       const { error } = await supabase.from('kusi_real_results').upsert([{
         match_id: matchId.toString(),
-        score_a: res.scoreA,
-        score_b: res.scoreB
+        score_a: res.scoreA || '',
+        score_b: res.scoreB || '',
+        team_a: res.teamA || null,
+        team_b: res.teamB || null
       }]);
       if (error) throw error;
-      setSavedMatches(prev => ({ ...prev, [matchId]: true }));
-      setUnlockedMatches(prev => ({ ...prev, [matchId]: false }));
-      alert(`Resultado del partido ${matchId} guardado exitosamente.`);
+      
+      if (res.scoreA !== '' && res.scoreB !== '') {
+        setSavedMatches(prev => ({ ...prev, [matchId]: true }));
+        setUnlockedMatches(prev => ({ ...prev, [matchId]: false }));
+      }
+      alert(`Datos del partido ${matchId} guardados exitosamente.`);
     } catch (error) {
       console.error(error);
       alert('Error al guardar el resultado.');
@@ -155,8 +162,17 @@ export default function AdminPage() {
     return { ...g.guest_info, computedPoints: pts, predictions: preds, userType: g.guest_info?.userType || 'guest' };
   }).sort((a, b) => b.computedPoints - a.computedPoints);
 
-  const guestLeaderboard = allLeaderboard.filter(g => g.userType === 'guest');
-  const employeeLeaderboard = allLeaderboard.filter(g => g.userType === 'employee');
+  const uniqueLeaderboard = [];
+  const seenDnis = new Set();
+  for (const g of allLeaderboard) {
+    if (!seenDnis.has(g.dni)) {
+      seenDnis.add(g.dni);
+      uniqueLeaderboard.push(g);
+    }
+  }
+
+  const guestLeaderboard = uniqueLeaderboard.filter(g => g.userType === 'guest');
+  const employeeLeaderboard = uniqueLeaderboard.filter(g => g.userType === 'employee');
 
   const currentLeaderboard = activeTab === 'guests' ? guestLeaderboard : employeeLeaderboard;
 
@@ -318,8 +334,30 @@ export default function AdminPage() {
                       )}
                       {match.stage} - Partido {match.id}
                     </div>
-                    <div className="text-lg font-black uppercase text-slate-800">{match.team_a} vs {match.team_b}</div>
-                    <div className="text-xs text-slate-400 mt-1">{match.date_placeholder}</div>
+                    <div className="text-lg font-black uppercase text-slate-800 flex flex-col md:flex-row items-center gap-2 mt-1">
+                      {isLocked ? (
+                        <span>{realResults[match.id]?.teamA || match.team_a}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={realResults[match.id]?.teamA !== undefined ? realResults[match.id].teamA : match.team_a}
+                          onChange={e => handleScoreChange(match.id, 'teamA', e.target.value)}
+                          className="w-full md:w-32 px-2 py-1 text-center font-bold border-2 border-slate-300 rounded focus:border-blue-500 outline-none uppercase text-sm"
+                        />
+                      )}
+                      <span className="text-slate-400 text-sm mx-1">vs</span>
+                      {isLocked ? (
+                        <span>{realResults[match.id]?.teamB || match.team_b}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={realResults[match.id]?.teamB !== undefined ? realResults[match.id].teamB : match.team_b}
+                          onChange={e => handleScoreChange(match.id, 'teamB', e.target.value)}
+                          className="w-full md:w-32 px-2 py-1 text-center font-bold border-2 border-slate-300 rounded focus:border-blue-500 outline-none uppercase text-sm"
+                        />
+                      )}
+                    </div>
+                    <div className="text-xs text-slate-400 mt-2">{match.date_placeholder}</div>
                   </div>
                   
                   <div className={`flex items-center gap-2 ${isLocked ? 'opacity-70 pointer-events-none' : ''}`}>
