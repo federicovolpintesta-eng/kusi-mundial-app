@@ -340,7 +340,7 @@ export default function AdminPage() {
                       ) : (
                         <input
                           type="text"
-                          value={realResults[match.id]?.teamA !== undefined ? realResults[match.id].teamA : match.team_a}
+                          value={realResults[match.id]?.teamA ?? match.team_a ?? ''}
                           onChange={e => handleScoreChange(match.id, 'teamA', e.target.value)}
                           className="w-full md:w-32 px-2 py-1 text-center font-bold border-2 border-slate-300 rounded focus:border-blue-500 outline-none uppercase text-sm"
                         />
@@ -351,7 +351,7 @@ export default function AdminPage() {
                       ) : (
                         <input
                           type="text"
-                          value={realResults[match.id]?.teamB !== undefined ? realResults[match.id].teamB : match.team_b}
+                          value={realResults[match.id]?.teamB ?? match.team_b ?? ''}
                           onChange={e => handleScoreChange(match.id, 'teamB', e.target.value)}
                           className="w-full md:w-32 px-2 py-1 text-center font-bold border-2 border-slate-300 rounded focus:border-blue-500 outline-none uppercase text-sm"
                         />
