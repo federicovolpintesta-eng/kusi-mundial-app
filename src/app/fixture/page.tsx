@@ -389,48 +389,37 @@ export default function Fixture() {
                     return (
                     <div key={match.id} className="w-full flex flex-col bg-white border-b border-slate-200">
                       {isMatchFinished && <div className="bg-slate-200 text-slate-500 text-[10px] font-bold text-center py-0.5">FINALIZADO</div>}
-                      <div className="flex justify-between items-end px-1 pb-1 pt-1">
-                        <span className="text-[10px] md:text-xs font-bold text-slate-800 w-1/3 text-left uppercase">{realResults[match.id]?.teamA || match.team_a}</span>
-                        <span className="text-[8px] md:text-[10px] text-slate-600 w-1/3 text-center leading-tight">Partido {match.id} - {match.date_placeholder} - {match.stadium_placeholder}</span>
-                        <span className="text-[10px] md:text-xs font-bold text-slate-800 w-1/3 text-right uppercase">{realResults[match.id]?.teamB || match.team_b}</span>
+                      <div className="flex flex-col w-full pt-1">
+                        <div className="w-full text-center pb-1">
+                          <span className="text-[9px] md:text-[11px] text-slate-500 font-medium">Partido {match.id} - {match.date_placeholder} - {match.stadium_placeholder}</span>
+                        </div>
+                        <div className="flex justify-center items-center gap-3 px-2 pb-1">
+                          <span className="text-sm md:text-lg font-black text-slate-800 text-right uppercase flex-1 tracking-tight" style={{ fontFamily: 'Impact, sans-serif', transform: 'scaleY(1.1)' }}>{realResults[match.id]?.teamA || match.team_a}</span>
+                          <span className="text-[10px] md:text-xs font-bold text-slate-300">VS</span>
+                          <span className="text-sm md:text-lg font-black text-slate-800 text-left uppercase flex-1 tracking-tight" style={{ fontFamily: 'Impact, sans-serif', transform: 'scaleY(1.1)' }}>{realResults[match.id]?.teamB || match.team_b}</span>
+                        </div>
                       </div>
                       
-                      <div className={`flex justify-between items-center bg-white mb-1 ${isMatchLocked ? 'opacity-60' : ''}`}>
-                        <input
-                          type="text"
-                          disabled={isViewer || isMatchLocked}
-                          value={predictions[match.id]?.teamA || ''}
-                          onChange={(e) => handleScoreChange(match.id, 'teamA', e.target.value)}
-                          className={`w-[38%] h-8 md:h-10 border border-[#1ca3d3] rounded-md px-2 font-bold text-slate-800 text-sm focus:outline-none uppercase ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-[#e3f2fd]'}`}
-                          placeholder=""
-                        />
-                        <div className="flex items-center gap-1 mx-1">
+                      <div className={`flex justify-center items-center bg-white mb-1 pb-1 ${isMatchLocked ? 'opacity-60' : ''}`}>
+                        <div className="flex items-center gap-2 mx-1">
                           <input
                             type="text" inputMode="numeric" maxLength={2}
                             disabled={isViewer || isMatchLocked}
                             value={isMatchFinished ? realResults[match.id].scoreA : (predictions[match.id]?.scoreA || '')}
                             onChange={(e) => handleScoreChange(match.id, 'scoreA', e.target.value)}
-                            className={`w-7 h-8 md:w-9 md:h-10 border border-[#1ca3d3] rounded-md text-center font-bold text-lg focus:outline-none ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-white text-slate-800'}`}
+                            className={`w-8 h-10 md:w-10 md:h-12 border-2 border-[#1ca3d3] rounded-md text-center font-bold text-lg md:text-xl focus:outline-none ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-white text-slate-800'}`}
                             placeholder="-"
                           />
-                          <span className="font-bold text-slate-400">-</span>
+                          <span className="font-bold text-slate-400 text-[10px] md:text-sm mx-1">VS</span>
                           <input
                             type="text" inputMode="numeric" maxLength={2}
                             disabled={isViewer || isMatchLocked}
                             value={isMatchFinished ? realResults[match.id].scoreB : (predictions[match.id]?.scoreB || '')}
                             onChange={(e) => handleScoreChange(match.id, 'scoreB', e.target.value)}
-                            className={`w-7 h-8 md:w-9 md:h-10 border border-[#1ca3d3] rounded-md text-center font-bold text-lg focus:outline-none ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-white text-slate-800'}`}
+                            className={`w-8 h-10 md:w-10 md:h-12 border-2 border-[#1ca3d3] rounded-md text-center font-bold text-lg md:text-xl focus:outline-none ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-white text-slate-800'}`}
                             placeholder="-"
                           />
                         </div>
-                        <input
-                          type="text"
-                          disabled={isViewer || isMatchLocked}
-                          value={predictions[match.id]?.teamB || ''}
-                          onChange={(e) => handleScoreChange(match.id, 'teamB', e.target.value)}
-                          className={`w-[38%] h-8 md:h-10 border border-[#1ca3d3] rounded-md px-2 font-bold text-slate-800 text-sm focus:outline-none text-right uppercase ${isViewer || isMatchLocked ? 'bg-slate-100 text-slate-500' : 'bg-[#e3f2fd]'}`}
-                          placeholder=""
-                        />
                       </div>
 
                       {isMatchFinished && (
